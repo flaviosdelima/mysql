@@ -1,0 +1,2 @@
+# mysql
+some usefull scripts 
