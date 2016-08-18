@@ -15,3 +15,21 @@ case lower(customers_tipo) when 'f' then null else customers_ie end,
 case lower(customers_tipo) when 'f' then '2' else '1' end
 FROM banco2.osc_customers 
  
+--------------------------------------------------------------
+INSERT INTO shedd.`ps_address` ( `id_country`, `id_state`, `id_customer`, 
+`id_manufacturer`, `id_supplier`, `id_warehouse`, `alias`, `company`, `lastname`, `firstname`, 
+`address1`, `address2`, `postcode`, `city`, `other`, `phone`, `phone_mobile`, `vat_number`, `dni`, 
+`date_add`, `date_upd`, `active`, `deleted`, `numend`, `compl`) 
+SELECT 58,
+(select ss.id_state from sheddpublicacoes.osc_zones z 
+inner join shedd.ps_state ss on ss.iso_code = z.zone_code	 
+where z.zone_id=spa.entry_zone_id limit 1),
+(select sc.id_customer from shedd.ps_customer sc where sc.id_old= spa.customers_id limit 1),
+ 0, 0, 0, 'Meu endereço', spa.entry_company,spa.entry_lastname,spa.entry_firstname,
+spa.entry_street_address, spa.entry_suburb, 
+spa.entry_postcode, spa.entry_city ,'',spc.customers_telephone,spc.customers_fax,'','',
+current_timestamp,current_timestamp, 1, 0, ',', ''
+
+FROM sheddpublicacoes.osc_address_book spa
+inner join sheddpublicacoes.osc_customers spc 
+on spa.customers_id = spc.customers_id
